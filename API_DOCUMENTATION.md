@@ -27,7 +27,7 @@
 | Environment | URL |
 |-------------|-----|
 | Local Development | `http://localhost:8000` |
-| Production | `https://your-railway-url.up.railway.app` |
+| Production | `https://api.mediai.app` *(or your deployed URL)* |
 
 ### API Prefix
 

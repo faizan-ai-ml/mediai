@@ -185,13 +185,16 @@ By using MediAI, you agree to indemnify and hold harmless MediAI and its creator
 
 ### Minimum Age Requirements
 
-| Use Type | Minimum Age |
-|----------|-------------|
-| Account Creation | 13 years old |
-| Medical Discussions | 18 years old (or with parental consent) |
+| Use Type | Minimum Age | Notes |
+|----------|-------------|-------|
+| Account Creation | 13 years old | Basic account access |
+| Medical Discussions | 18 years old | Or with parental consent for ages 13-17 |
+
+**Note for Ages 13-17**: Users between 13-17 years old may create an account but should only use medical features with parental/guardian consent and supervision. Parents are encouraged to review AI responses with their children and consult healthcare providers for any health concerns.
 
 ### Parental Responsibility
 
+- Parents/guardians must provide consent for minors (13-17) to use medical features
 - Parents/guardians are responsible for supervising minors' use
 - Medical information should be discussed with a pediatrician for children
 - Parental consent is required for minors discussing health topics

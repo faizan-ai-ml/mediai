@@ -9,7 +9,7 @@
 ## 📖 Table of Contents
 
 - [Current Status](#-current-status)
-- [Phase 1: Foundation (Q4 2025)](#-phase-1-foundation-current---q4-2025)
+- [Phase 1: Foundation (Q4 2025)](#️-phase-1-foundation-current---q4-2025)
 - [Phase 2: Enhancement (Q1 2026)](#-phase-2-enhancement-q1-2026)
 - [Phase 3: Medical Validation (Q2 2026)](#-phase-3-medical-validation-q2-2026)
 - [Phase 4: Advanced Features (Q3 2026)](#-phase-4-advanced-features-q3-2026)

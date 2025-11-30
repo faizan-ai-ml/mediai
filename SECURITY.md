@@ -120,7 +120,11 @@ We take security vulnerabilities seriously and appreciate responsible disclosure
 
 ### How to Report
 
-**Email**: security@mediai.com (or contact the maintainer through GitHub)
+**Primary Contact**: [@faizan-ai-ml](https://github.com/faizan-ai-ml) through GitHub
+
+You can report vulnerabilities by:
+1. Opening a private security advisory on the repository
+2. Sending a direct message to the maintainer through GitHub
 
 ### What to Include
 
@@ -319,7 +323,7 @@ When security updates are released:
 
 ## 📞 Security Contact
 
-**Email**: Contact the maintainer through GitHub
+**Primary Contact**: [@faizan-ai-ml](https://github.com/faizan-ai-ml) through GitHub
 
 **Response Time**: 48 hours for initial acknowledgment
 
