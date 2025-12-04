@@ -1,16 +1,24 @@
 import React, { useState, useRef, useEffect } from 'react'
 import axios from 'axios'
 import { useAuth } from './AuthContext'
+import SymptomChecker from './SymptomChecker'
+import LabInterpreter from './LabInterpreter'
+import DrugChecker from './DrugChecker'
 
 function Chat() {
   const { user, logout } = useAuth()
+  const [showSymptomChecker, setShowSymptomChecker] = useState(false)
+  const [showDrugChecker, setShowDrugChecker] = useState(false)
+  const [showLabInterpreter, setShowLabInterpreter] = useState(false)
   const [messages, setMessages] = useState([])
+  const [conversationId, setConversationId] = useState(null)
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef(null)
   const inputRef = useRef(null)
 
+  // all hooks declared above — helper below
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
@@ -20,30 +28,43 @@ function Chat() {
   }, [messages])
 
   useEffect(() => {
-    // Welcome message
     setMessages([{
       role: 'assistant',
-      content: "👋 Hello! I'm MediAI, your medical AI assistant. I'm here to help answer your health questions and provide medical information.\n\n⚠️ Important: I provide educational information only and am not a replacement for professional medical advice. For emergencies, please call 911 or your local emergency services.\n\nHow can I help you today?"
+      content:
+        "👋 Hello! I'm MediAI, your medical AI assistant. I'm here to help answer your health questions and provide medical information.\n\n⚠️ Important: I provide educational information only and am not a replacement for professional medical advice. For emergencies, please call 911 or your local emergency services.\n\nHow can I help you today?"
     }])
   }, [])
 
+  // NOW the early returns are AFTER all hooks - this fixes the bug!
+  if (showSymptomChecker) {
+    return <SymptomChecker onBack={() => setShowSymptomChecker(false)} />
+  }
+
+  if (showDrugChecker) {
+    return <DrugChecker onBack={() => setShowDrugChecker(false)} />
+  }
+  if (showLabInterpreter) {
+    return <LabInterpreter onBack={() => setShowLabInterpreter(false)} />
+  }
   const sendMessage = async () => {
     if (!input.trim() || loading) return
 
     const userMessage = input.trim()
     setInput('')
 
-    // Add user message
     setMessages(prev => [...prev, { role: 'user', content: userMessage }])
     setLoading(true)
     setIsTyping(true)
 
     try {
       const response = await axios.post('/api/chat', {
-        message: userMessage
+        message: userMessage,
+        conversation_id: conversationId
       })
+      if (!conversationId) {
+        setConversationId(response.data.conversation_id)
+      }
 
-      // Simulate typing delay for better UX
       setTimeout(() => {
         setMessages(prev => [...prev, {
           role: 'assistant',
@@ -91,7 +112,6 @@ function Chat() {
       backgroundColor: '#f8fafc',
       overflow: 'hidden'
     }}>
-      {/* Header */}
       <header style={{
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         color: 'white',
@@ -140,7 +160,6 @@ function Chat() {
             </div>
           </div>
 
-          {/* User Profile & Logout */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{
               display: 'flex',
@@ -189,7 +208,6 @@ function Chat() {
         </div>
       </header>
 
-      {/* Chat Container */}
       <div style={{
         flex: 1,
         overflowY: 'auto',
@@ -202,11 +220,106 @@ function Chat() {
         margin: '0 auto',
         boxSizing: 'border-box'
       }}>
-        {/* Quick Questions (only show when no messages except welcome) */}
         {messages.length <= 1 && (
-          <div style={{
-            marginBottom: '20px'
-          }}>
+          <div style={{ marginBottom: '20px' }}>
+            <button
+              onClick={() => setShowSymptomChecker(true)}
+              style={{
+                width: '100%',
+                padding: '20px',
+                backgroundColor: '#667eea',
+                color: 'white',
+                border: 'none',
+                borderRadius: '16px',
+                fontSize: '18px',
+                fontWeight: '700',
+                cursor: 'pointer',
+                marginBottom: '16px',
+                boxShadow: '0 4px 12px rgba(102,126,234,0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '12px',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-2px)'
+                e.target.style.boxShadow = '0 6px 16px rgba(102,126,234,0.4)'
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0)'
+                e.target.style.boxShadow = '0 4px 12px rgba(102,126,234,0.3)'
+              }}
+            >
+              <span style={{ fontSize: '32px' }}>🩺</span>
+              <span>AI Symptom Checker</span>
+            </button>
+
+            <button
+              onClick={() => setShowDrugChecker(true)}
+              style={{
+                width: '100%',
+                padding: '20px',
+                backgroundColor: '#10b981',
+                color: 'white',
+                border: 'none',
+                borderRadius: '16px',
+                fontSize: '18px',
+                fontWeight: '700',
+                cursor: 'pointer',
+                marginBottom: '24px',
+                boxShadow: '0 4px 12px rgba(16,185,129,0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '12px',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-2px)'
+                e.target.style.boxShadow = '0 6px 16px rgba(16,185,129,0.4)'
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0)'
+                e.target.style.boxShadow = '0 4px 12px rgba(16,185,129,0.3)'
+              }}
+            >
+              <span style={{ fontSize: '32px' }}>💊</span>
+              <span>Drug Interaction Checker</span>
+            </button>
+            <button
+              onClick={() => setShowLabInterpreter(true)}
+              style={{
+                width: '100%',
+                padding: '20px',
+                backgroundColor: '#f59e0b',
+                color: 'white',
+                border: 'none',
+                borderRadius: '16px',
+                fontSize: '18px',
+                fontWeight: '700',
+                cursor: 'pointer',
+                marginBottom: '24px',
+                boxShadow: '0 4px 12px rgba(245,158,11,0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '12px',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-2px)'
+                e.target.style.boxShadow = '0 6px 16px rgba(245,158,11,0.4)'
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0)'
+                e.target.style.boxShadow = '0 4px 12px rgba(245,158,11,0.3)'
+              }}
+            >
+              <span style={{ fontSize: '32px' }}>🧪</span>
+              <span>Lab Result Interpreter</span>
+            </button>
+
             <p style={{
               fontSize: '14px',
               color: '#64748b',
@@ -256,7 +369,6 @@ function Chat() {
           </div>
         )}
 
-        {/* Messages */}
         {messages.map((msg, idx) => (
           <div
             key={idx}
@@ -324,7 +436,6 @@ function Chat() {
           </div>
         ))}
 
-        {/* Typing Indicator */}
         {isTyping && (
           <div style={{
             display: 'flex',
@@ -358,7 +469,7 @@ function Chat() {
                 gap: '6px',
                 alignItems: 'center'
               }}>
-                <div className="typing-dot" style={{
+                <div style={{
                   width: '8px',
                   height: '8px',
                   backgroundColor: '#667eea',
@@ -366,7 +477,7 @@ function Chat() {
                   animation: 'bounce 1.4s infinite ease-in-out both',
                   animationDelay: '0s'
                 }}></div>
-                <div className="typing-dot" style={{
+                <div style={{
                   width: '8px',
                   height: '8px',
                   backgroundColor: '#667eea',
@@ -374,7 +485,7 @@ function Chat() {
                   animation: 'bounce 1.4s infinite ease-in-out both',
                   animationDelay: '0.2s'
                 }}></div>
-                <div className="typing-dot" style={{
+                <div style={{
                   width: '8px',
                   height: '8px',
                   backgroundColor: '#667eea',
@@ -390,7 +501,6 @@ function Chat() {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Area */}
       <div style={{
         padding: '20px 24px',
         backgroundColor: 'white',
@@ -470,7 +580,7 @@ function Chat() {
             >
               {loading ? (
                 <>
-                  <div className="spinner" style={{
+                  <div style={{
                     width: '16px',
                     height: '16px',
                     border: '2px solid rgba(255,255,255,0.3)',
@@ -489,7 +599,6 @@ function Chat() {
             </button>
           </div>
 
-          {/* Disclaimer */}
           <div style={{
             marginTop: '12px',
             padding: '12px',
@@ -508,13 +617,12 @@ function Chat() {
               lineHeight: '1.5',
               fontWeight: '500'
             }}>
-              <strong>Medical Disclaimer:</strong> This AI assistant provides general health information only and is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider.
+              <strong>Medical Disclaimer:</strong> This AI assistant provides general health information only and is not a substitute for professional medical advice, diagnosis, or treatment.
             </p>
           </div>
         </div>
       </div>
 
-      {/* CSS Animations */}
       <style>{`
         @keyframes slideIn {
           from {
@@ -552,7 +660,7 @@ function Chat() {
 
         ::-webkit-scrollbar-thumb {
           background: #cbd5e1;
-          border-radius: 4px;
+          borderRadius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
